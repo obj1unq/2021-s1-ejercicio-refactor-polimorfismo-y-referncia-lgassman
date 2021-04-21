@@ -17,26 +17,7 @@ object paquete {
 	// Cuando se reserva se cambia el estado y se modifican los lugares 
 	// disponibles en los servicios
 	method reservar() {
-		
-		if(servicioOfrecido.esVehiculoParaTralado()){
-			servicioOfrecido.asientosDisponibles(servicioOfrecido.asientosDisponibles() - cantidadPersonas)
-		}
-		
-		if(servicioOfrecido.esHotel()) {
-			servicioOfrecido.camasDisponibles(servicioOfrecido.camasDisponibles() - cantidadPersonas)
-			if (premium) {
-				servicioOfrecido.reservarSpa()
-			}
-		}
-				
-		if(servicioOfrecido.esCombinado()) {
-			servicioOfrecido.asientosDisponibles(servicioOfrecido.asientosDisponibles() - cantidadPersonas)
-			servicioOfrecido.camasDisponibles(servicioOfrecido.camasDisponibles() - cantidadPersonas)
-			if (premium) {
-				servicioOfrecido.reservarSpa()
-			}
-			
-		}
+		servicioOfrecido.reservar(self)
 		reservado = true
 	}
 
@@ -82,6 +63,28 @@ object servicio {
 						and (not _paquete.premium() or self.tieneAireAcondicionado())
 		}
 		return false //??
+	}
+	
+	method reservar(_paquete) {
+		if(self.esVehiculoParaTralado()){
+			self.asientosDisponibles(self.asientosDisponibles() - _paquete.cantidadPersonas())
+		}
+		
+		if(self.esHotel()) {
+			self.camasDisponibles(self.camasDisponibles() - _paquete.cantidadPersonas())
+			if (_paquete.premium()) {
+				self.reservarSpa()
+			}
+		}
+				
+		if(self.esCombinado()) {
+			self.asientosDisponibles(self.asientosDisponibles() - _paquete.cantidadPersonas())
+			self.camasDisponibles(self.camasDisponibles() - _paquete.cantidadPersonas())
+			if (_paquete.premium()) {
+				self.reservarSpa()
+			}
+			
+		}
 	}
 
 	method configurarComoHotel(_estrellas, _camas, _spaDisponible) {
