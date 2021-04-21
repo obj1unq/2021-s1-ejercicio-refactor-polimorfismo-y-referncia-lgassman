@@ -1,0 +1,32 @@
+import referencias.*
+test "efecto por un tercero" {
+
+	principiante.suenaLindo()
+	virtuoso.tocar()
+	principiante.suenaLindo()
+
+	assert.that(true)
+}
+
+test "uso un objeto que nada que ver ¿andará?" {
+	principiante.instrumento(equipoChico)
+	principiante.tocar()
+	principiante.suenaLindo()
+	assert.that(true)
+}
+
+test "uso otro objeto que nada que ver ¿andará?" {
+	guitarraElectrica.equipo(zapato)
+	principiante.suenaLindo()
+	principiante.tocar()
+	assert.that(true)
+}
+
+test "autoreferencia" {
+	guitarraElectroAcustica.equipo(guitarraElectroAcustica)
+	principiante.instrumento(guitarraElectroAcustica)
+	principiante.suenaLindo()
+	principiante.tocar()
+	principiante.suenaLindo()
+	assert.that(true)
+}
