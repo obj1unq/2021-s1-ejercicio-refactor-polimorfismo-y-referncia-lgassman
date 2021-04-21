@@ -23,30 +23,55 @@ object paquete {
 
 }
 
+object hotel {
+	var property camasDisponibles = 30 // camas disponibles del HOTEL
+	var property estrellas = 1 // cantidad de estrellas del HOTEL
+	var property spaDisponible = true // si el HOTEL tiene spa disponible
+	
+	method sePuedeReservar(_paquete) {
+		// Ademas, si el paquete es premium el hotel tiene que ser
+		// como minimo de 4 estrellas
+		return self.camasDisponibles() >= _paquete.cantidadPersonas() and 
+				(not _paquete.premium() or (self.estrellas() >= 4 and self.spaDisponible())) 
+	}
+	
+	method reservar(_paquete) {
+		self.camasDisponibles(self.camasDisponibles() - _paquete.cantidadPersonas())
+		if (_paquete.premium()) {
+			self.reservarSpa()
+		}
+	}
+	
+	method reservarSpa() {
+		spaDisponible = false
+	}
+	
+	method configurar(_estrellas, _camas, _spaDisponible) {
+		estrellas = _estrellas
+		camasDisponibles = _camas
+		spaDisponible = _spaDisponible
+	}
+	
+}
+
 object servicio {
 
-	var property asientosDisponibles = 10 // lugares disponibles del VEHICULO
 	var property camasDisponibles = 30 // camas disponibles del HOTEL
 	var estrellas = 1 // cantidad de estrellas del HOTEL
+	var spaDisponible = true // si el HOTEL tiene spa disponible
+
+	var property asientosDisponibles = 10 // lugares disponibles del VEHICULO
 	var aireAcondicionado = false // si el VEHICULO tiene  aire acond.
 	var vtv = true // si el VEHICULO tiene la vtv
-	var spaDisponible = true // si el HOTEL tiene spa disponible
-	var esHotel = false
+
 	var esVehiculoParaTraslado = false
 	var esCombinado = false
 
 	method reservarSpa() {
 		spaDisponible = false
-	
 	}
 	
 	method sePuedeReservar(_paquete) {
-		if (self.esHotel()) { // Un hotel se puede reservar si hay lugares disponibles. 
-		// Ademas, si el paquete es premium el hotel tiene que ser
-		// como minimo de 4 estrellas
-			return self.camasDisponibles() >= _paquete.cantidadPersonas() and 
-					(not _paquete.premium() or (self.estrellas() >= 4 and self.spaDisponible())) 
-		}
 		
 		if (self.esVehiculoParaTralado()) {
 			// Un traslado se puede reservar si el vehiculo cuenta con 
@@ -69,14 +94,7 @@ object servicio {
 		if(self.esVehiculoParaTralado()){
 			self.asientosDisponibles(self.asientosDisponibles() - _paquete.cantidadPersonas())
 		}
-		
-		if(self.esHotel()) {
-			self.camasDisponibles(self.camasDisponibles() - _paquete.cantidadPersonas())
-			if (_paquete.premium()) {
-				self.reservarSpa()
-			}
-		}
-				
+						
 		if(self.esCombinado()) {
 			self.asientosDisponibles(self.asientosDisponibles() - _paquete.cantidadPersonas())
 			self.camasDisponibles(self.camasDisponibles() - _paquete.cantidadPersonas())
@@ -87,17 +105,9 @@ object servicio {
 		}
 	}
 
-	method configurarComoHotel(_estrellas, _camas, _spaDisponible) {
-		esHotel = true
-		esCombinado = false
-		esVehiculoParaTraslado = false
-		estrellas = _estrellas
-		camasDisponibles = _camas
-		spaDisponible = _spaDisponible
-	}
+
 
 	method configurarComoVehiculo(_tieneAire, _tieneVtv, _asientosDisponibles) {
-		esHotel = false
 		esCombinado = false
 		esVehiculoParaTraslado = true
 		aireAcondicionado = _tieneAire
@@ -106,7 +116,6 @@ object servicio {
 	}
 
 	method configurarComoCombinado(_estrellas, _camas, _spaDisponible, _tieneAire, _tieneVtv, _asientosDisponibles) {
-		esHotel = false
 		esCombinado = true
 		esVehiculoParaTraslado = false
 		estrellas = _estrellas
@@ -117,9 +126,6 @@ object servicio {
 		asientosDisponibles = _asientosDisponibles
 	}
 
-	method esHotel() {
-		return esHotel
-	}
 	
 	method esCombinado() {
 		return esCombinado

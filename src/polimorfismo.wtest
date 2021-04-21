@@ -1,18 +1,20 @@
 import polimorfismo.*
 test "hotel comun reserva ok" {
 	 
-	servicio.configurarComoHotel(2, 50, false)
+	hotel.configurar(2, 50, false)
+	paquete.servicioOfrecido(hotel)
 	paquete.premium(false);
 	paquete.cantidadPersonas(10)
 	
 	assert.that(paquete.sePuedeReservar())
 	paquete.reservar()
 	assert.that(paquete.estaReservado())
-	assert.equals(40, servicio.camasDisponibles())
+	assert.equals(40, hotel.camasDisponibles())
 }
 test "hotel comun no se puede reservar" {
 	 
-	servicio.configurarComoHotel(2, 5, false)
+	hotel.configurar(2, 5, false)
+	paquete.servicioOfrecido(hotel)
 	paquete.premium(false);
 	paquete.cantidadPersonas(10)
 	
@@ -21,19 +23,21 @@ test "hotel comun no se puede reservar" {
 
 test "hotel premium reserva ok" {
 	 
-	servicio.configurarComoHotel(5, 50, true)
+	hotel.configurar(5, 50, true)
+	paquete.servicioOfrecido(hotel)
 	paquete.premium(true);
 	paquete.cantidadPersonas(10)
 	
 	assert.that(paquete.sePuedeReservar())
 	paquete.reservar()
 	assert.that(paquete.estaReservado())
-	assert.equals(40, servicio.camasDisponibles())
-	assert.notThat(servicio.spaDisponible())
+	assert.equals(40, hotel.camasDisponibles())
+	assert.notThat(hotel.spaDisponible())
 }
 test "hotel premium reserva no ok" {
 	 
-	servicio.configurarComoHotel(5, 50, false)
+	hotel.configurar(5, 50, false)
+	paquete.servicioOfrecido(hotel)
 	paquete.premium(true);
 	paquete.cantidadPersonas(10)
 	
