@@ -56,9 +56,7 @@ object hotel {
 
 object servicio {
 
-	var property camasDisponibles = 30 // camas disponibles del HOTEL
-	var estrellas = 1 // cantidad de estrellas del HOTEL
-	var spaDisponible = true // si el HOTEL tiene spa disponible
+	var property alojamiento = hotel
 
 	var property asientosDisponibles = 10 // lugares disponibles del VEHICULO
 	var aireAcondicionado = false // si el VEHICULO tiene  aire acond.
@@ -66,10 +64,6 @@ object servicio {
 
 	var esVehiculoParaTraslado = false
 	var esCombinado = false
-
-	method reservarSpa() {
-		spaDisponible = false
-	}
 	
 	method sePuedeReservar(_paquete) {
 		
@@ -82,8 +76,7 @@ object servicio {
 		}
 		if (self.esCombinado()) {
 			// Si es combinado tiene que cumplir el requierimiento del hotel y del vehiculo
-			return self.camasDisponibles() >= _paquete.cantidadPersonas() and 
-					(not _paquete.premium() or (self.estrellas() >= 4 and self.spaDisponible())) and 
+			return alojamiento.sePuedeReservar(_paquete) and 
 						self.asientosDisponibles() >= _paquete.cantidadPersonas() and self.tieneVTV() 
 						and (not _paquete.premium() or self.tieneAireAcondicionado())
 		}
@@ -97,15 +90,9 @@ object servicio {
 						
 		if(self.esCombinado()) {
 			self.asientosDisponibles(self.asientosDisponibles() - _paquete.cantidadPersonas())
-			self.camasDisponibles(self.camasDisponibles() - _paquete.cantidadPersonas())
-			if (_paquete.premium()) {
-				self.reservarSpa()
-			}
-			
+			alojamiento.reservar(_paquete)
 		}
 	}
-
-
 
 	method configurarComoVehiculo(_tieneAire, _tieneVtv, _asientosDisponibles) {
 		esCombinado = false
@@ -118,9 +105,9 @@ object servicio {
 	method configurarComoCombinado(_estrellas, _camas, _spaDisponible, _tieneAire, _tieneVtv, _asientosDisponibles) {
 		esCombinado = true
 		esVehiculoParaTraslado = false
-		estrellas = _estrellas
-		camasDisponibles = _camas
-		spaDisponible = _spaDisponible
+		
+		alojamiento.configurar(_estrellas, _camas, _spaDisponible)
+
 		aireAcondicionado = _tieneAire
 		vtv = _tieneVtv
 		asientosDisponibles = _asientosDisponibles
@@ -135,10 +122,6 @@ object servicio {
 		return esVehiculoParaTraslado
 	}
 
-	method estrellas() {
-		return estrellas
-	}
-
 	method tieneAireAcondicionado() {
 		return aireAcondicionado
 	}
@@ -146,9 +129,13 @@ object servicio {
 	method tieneVTV() {
 		return vtv
 	}
-
+	
+	method camasDisponibles() {
+		return alojamiento.camasDisponibles()
+	}
+	
 	method spaDisponible() {
-		return spaDisponible
+		return alojamiento.spaDisponible()
 	}
 
 }

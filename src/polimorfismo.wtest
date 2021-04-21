@@ -1,7 +1,10 @@
 import polimorfismo.*
 test "hotel comun reserva ok" {
-	 
-	hotel.configurar(2, 50, false)
+	 	
+	hotel.estrellas(2)
+	hotel.camasDisponibles(50)
+	hotel.spaDisponible(false)
+	
 	paquete.servicioOfrecido(hotel)
 	paquete.premium(false);
 	paquete.cantidadPersonas(10)
