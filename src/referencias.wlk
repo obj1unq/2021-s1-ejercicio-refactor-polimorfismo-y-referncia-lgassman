@@ -57,6 +57,7 @@ object guitarraElectrica {
 		return equipo.gastado()
 	}
 	
+	
 }
 
 object guitarraElectroAcustica {
@@ -65,15 +66,15 @@ object guitarraElectroAcustica {
 	
 	method usar() {
 		if( ! equipo.gastado()) { 
-			usado = true
 			equipo.usar()
 		}
+		usado = true
 	}
 	
 	method gastado() {
 		return usado
 	}
-	
+
 }
 
 object equipoChico {

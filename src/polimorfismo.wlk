@@ -11,31 +11,7 @@ object paquete {
 
 	// Se puede reservar si no esta reservado y el servicio se puede reservar
 	method sePuedeReservar() {
-		if (self.estaReservado()) {
-			return false
-		}
-		if (servicioOfrecido.esHotel()) { // Un hotel se puede reservar si hay lugares disponibles. 
-		// Ademas, si el paquete es premium el hotel tiene que ser
-		// como minimo de 4 estrellas
-			return servicioOfrecido.camasDisponibles() >= cantidadPersonas and 
-					(not premium or (servicioOfrecido.estrellas() >= 4 and servicioOfrecido.spaDisponible())) 
-		}
-		
-		if (servicioOfrecido.esVehiculoParaTralado()) {
-			// Un traslado se puede reservar si el vehiculo cuenta con 
-			// lugares disponibles y tiene la verificacion tecnica al dia.
-			// Si el paquete es premium, tambien tiene que cumplir que  
-			// tenga aire Acondicionado
-			return servicioOfrecido.asientosDisponibles() >= cantidadPersonas and servicioOfrecido.tieneVTV() and (not premium or servicioOfrecido.tieneAireAcondicionado())
-		}
-		if (servicioOfrecido.esCombinado()) {
-			// Si es combinado tiene que cumplir el requierimiento del hotel y del vehiculo
-			return servicioOfrecido.camasDisponibles() >= cantidadPersonas and 
-					(not premium or (servicioOfrecido.estrellas() >= 4 and servicioOfrecido.spaDisponible())) and 
-						servicioOfrecido.asientosDisponibles() >= cantidadPersonas and servicioOfrecido.tieneVTV() 
-						and (not premium or servicioOfrecido.tieneAireAcondicionado())
-		}
-		return false // ??		
+		return not self.estaReservado() and servicioOfrecido.sePuedeReservar(self)
 	}
 
 	// Cuando se reserva se cambia el estado y se modifican los lugares 
@@ -80,7 +56,32 @@ object servicio {
 
 	method reservarSpa() {
 		spaDisponible = false
-	;
+	
+	}
+	
+	method sePuedeReservar(_paquete) {
+		if (self.esHotel()) { // Un hotel se puede reservar si hay lugares disponibles. 
+		// Ademas, si el paquete es premium el hotel tiene que ser
+		// como minimo de 4 estrellas
+			return self.camasDisponibles() >= _paquete.cantidadPersonas() and 
+					(not _paquete.premium() or (self.estrellas() >= 4 and self.spaDisponible())) 
+		}
+		
+		if (self.esVehiculoParaTralado()) {
+			// Un traslado se puede reservar si el vehiculo cuenta con 
+			// lugares disponibles y tiene la verificacion tecnica al dia.
+			// Si el paquete es premium, tambien tiene que cumplir que  
+			// tenga aire Acondicionado
+			return self.asientosDisponibles() >= _paquete.cantidadPersonas() and self.tieneVTV() and (not _paquete.premium() or self.tieneAireAcondicionado())
+		}
+		if (self.esCombinado()) {
+			// Si es combinado tiene que cumplir el requierimiento del hotel y del vehiculo
+			return self.camasDisponibles() >= _paquete.cantidadPersonas() and 
+					(not _paquete.premium() or (self.estrellas() >= 4 and self.spaDisponible())) and 
+						self.asientosDisponibles() >= _paquete.cantidadPersonas() and self.tieneVTV() 
+						and (not _paquete.premium() or self.tieneAireAcondicionado())
+		}
+		return false //??
 	}
 
 	method configurarComoHotel(_estrellas, _camas, _spaDisponible) {
