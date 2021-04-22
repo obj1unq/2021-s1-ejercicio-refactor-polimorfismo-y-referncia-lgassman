@@ -50,20 +50,22 @@ test "hotel premium reserva no ok" {
 test "vehiculo comun reserva ok" {
 	 
 	 
-	servicio.configurarComoVehiculo(false, true, 15)  
+	vehiculo.configurar(false, true, 15)
+	paquete.servicioOfrecido(vehiculo)  
 	paquete.premium(false);
 	paquete.cantidadPersonas(10)
 	
 	assert.that(paquete.sePuedeReservar())
 	paquete.reservar()
 	assert.that(paquete.estaReservado())
-	assert.equals(5, servicio.asientosDisponibles())
+	assert.equals(5, vehiculo.asientosDisponibles())
 }
 
 test "vehiculo comun reserva no ok" {
 	 
 	 
-	servicio.configurarComoVehiculo(false, true, 8)  
+	vehiculo.configurar(false, true, 8)
+	paquete.servicioOfrecido(vehiculo)  
 	paquete.premium(false);
 	paquete.cantidadPersonas(10)
 	
@@ -73,19 +75,21 @@ test "vehiculo comun reserva no ok" {
 test "vehiculo premium reserva ok" {
 	 
 	 
-	servicio.configurarComoVehiculo(true, true, 15)  
+	vehiculo.configurar(true, true, 15)
+	paquete.servicioOfrecido(vehiculo)  
 	paquete.premium(true);
 	paquete.cantidadPersonas(10)
 	
 	assert.that(paquete.sePuedeReservar())
 	paquete.reservar()
 	assert.that(paquete.estaReservado())
-	assert.equals(5, servicio.asientosDisponibles())
+	assert.equals(5, vehiculo.asientosDisponibles())
 }
 
 test "vehiculo premium reserva no ok" {
 	 	 
-	servicio.configurarComoVehiculo(false, true, 15)  
+	vehiculo.configurar(false, true, 15) 
+	paquete.servicioOfrecido(vehiculo) 
 	paquete.premium(true);
 	paquete.cantidadPersonas(10)
 	
