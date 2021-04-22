@@ -90,10 +90,7 @@ object vehiculo {
 object servicio {
 
 	var property alojamiento = hotel
-
-	var property asientosDisponibles = 10 // lugares disponibles del VEHICULO
-	var aireAcondicionado = false // si el VEHICULO tiene  aire acond.
-	var vtv = true // si el VEHICULO tiene la vtv
+	var property traslado = vehiculo
 
 	var esCombinado = false
 	
@@ -102,8 +99,7 @@ object servicio {
 		if (self.esCombinado()) {
 			// Si es combinado tiene que cumplir el requierimiento del hotel y del vehiculo
 			return alojamiento.sePuedeReservar(_paquete) and 
-						self.asientosDisponibles() >= _paquete.cantidadPersonas() and self.tieneVTV() 
-						and (not _paquete.premium() or self.tieneAireAcondicionado())
+						traslado.sePuedeReservar(_paquete)
 		}
 		return false //??
 	}
@@ -111,7 +107,7 @@ object servicio {
 	method reservar(_paquete) {
 						
 		if(self.esCombinado()) {
-			self.asientosDisponibles(self.asientosDisponibles() - _paquete.cantidadPersonas())
+			traslado.reservar(_paquete)
 			alojamiento.reservar(_paquete)
 		}
 	}
@@ -121,23 +117,12 @@ object servicio {
 		esCombinado = true
 		
 		alojamiento.configurar(_estrellas, _camas, _spaDisponible)
-
-		aireAcondicionado = _tieneAire
-		vtv = _tieneVtv
-		asientosDisponibles = _asientosDisponibles
+        traslado.configurar(_tieneAire, _tieneVtv, _asientosDisponibles)
 	}
 
 	
 	method esCombinado() {
 		return esCombinado
-	}
-
-	method tieneAireAcondicionado() {
-		return aireAcondicionado
-	}
-
-	method tieneVTV() {
-		return vtv
 	}
 	
 	method camasDisponibles() {
@@ -146,6 +131,10 @@ object servicio {
 	
 	method spaDisponible() {
 		return alojamiento.spaDisponible()
+	}
+	
+	method asientosDisponibles() {
+		return traslado.asientosDisponibles()
 	}
 
 }
