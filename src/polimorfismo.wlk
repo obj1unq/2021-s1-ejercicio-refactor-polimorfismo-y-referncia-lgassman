@@ -1,7 +1,7 @@
 object paquete {
 
 	var property cantidadPersonas = 1 // un numero
-	var property servicioOfrecido = servicio // hotel, traslado, combinado
+	var property servicioOfrecido = hotel // hotel, traslado, combinado
 	var property premium = false // un booleano 
 	var reservado = false
 
@@ -87,42 +87,25 @@ object vehiculo {
 	
 }
 
-object servicio {
+object servicioCombinado {
 
 	var property alojamiento = hotel
 	var property traslado = vehiculo
-
-	var esCombinado = false
 	
-	method sePuedeReservar(_paquete) {
-		
-		if (self.esCombinado()) {
-			// Si es combinado tiene que cumplir el requierimiento del hotel y del vehiculo
-			return alojamiento.sePuedeReservar(_paquete) and 
-						traslado.sePuedeReservar(_paquete)
-		}
-		return false //??
+	method sePuedeReservar(_paquete) {		
+			//tiene que cumplir el requierimiento del hotel y del vehiculo
+		return alojamiento.sePuedeReservar(_paquete) and traslado.sePuedeReservar(_paquete)
 	}
 	
 	method reservar(_paquete) {
-						
-		if(self.esCombinado()) {
-			traslado.reservar(_paquete)
-			alojamiento.reservar(_paquete)
-		}
+		traslado.reservar(_paquete)
+		alojamiento.reservar(_paquete)
 	}
 
 
-	method configurarComoCombinado(_estrellas, _camas, _spaDisponible, _tieneAire, _tieneVtv, _asientosDisponibles) {
-		esCombinado = true
-		
+	method configurar(_estrellas, _camas, _spaDisponible, _tieneAire, _tieneVtv, _asientosDisponibles) {		
 		alojamiento.configurar(_estrellas, _camas, _spaDisponible)
         traslado.configurar(_tieneAire, _tieneVtv, _asientosDisponibles)
-	}
-
-	
-	method esCombinado() {
-		return esCombinado
 	}
 	
 	method camasDisponibles() {
